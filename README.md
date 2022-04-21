@@ -124,19 +124,19 @@
   
   `kubeadm init` 初始化 master 节点失败，并且报错 `node not found`。由于所有的 `pause infra images` 未标识（tagged）`k8s.io/pause:3.5`，因此在 master 节点上的 `kubelet` 不能创建 `sandbox`。
   
-  ![](D:\Linux操作系统与编程语言汇总\Typora文档汇总\Kubernetes\pictures\Kani - Ansible 快速部署与管理 Kubernetes v1.22.1\kubeadm-init-master-error-1.jpg)
+  ![](https://github.com/Alberthua-Perl/tech-docs/blob/master/images/rapid-kube-deploy/kubeadm-init-master-error-1.jpg)
   
-  ![](D:\Linux操作系统与编程语言汇总\Typora文档汇总\Kubernetes\pictures\Kani - Ansible 快速部署与管理 Kubernetes v1.22.1\kubeadm-init-master-error-2.jpg)
+  ![](https://github.com/Alberthua-Perl/tech-docs/blob/master/images/rapid-kube-deploy/kubeadm-init-master-error-2.jpg)
 
 - playbook 中的 `register` 注册变量不能在不同的 play 间引用。
   
-  ![](D:\Linux操作系统与编程语言汇总\Typora文档汇总\Kubernetes\pictures\Kani - Ansible 快速部署与管理 Kubernetes v1.22.1\register-var-used-between-two-plays-error.jpg)
+  ![](https://github.com/Alberthua-Perl/tech-docs/blob/master/images/rapid-kube-deploy/register-var-used-between-two-plays-error.jpg)
 
 - 由于使用 `containerd` 来运行容器，因此 `ctr`、`crictl` 与 `nerdctl` 可被用来获取容器镜像与容器自身的状态。但是，仅仅 `crictl` 可直接使用 containerd 配置文件 `/etc/containerd/config.toml`。crictl 可加载配置有 quay registry endpoint、user 与 password 的配置文件。
 
 - 若使用自签名的 CA 证书，crictl 不能从 quay 容器镜像仓库拉取镜像，并且总是报错 `x509 cert file error`：
   
-  ![](D:\Linux操作系统与编程语言汇总\Typora文档汇总\Kubernetes\pictures\Kani - Ansible 快速部署与管理 Kubernetes v1.22.1\crictl-ssl-ca-request-quay-error.jpg)
+  ![](https://github.com/Alberthua-Perl/tech-docs/blob/master/images/rapid-kube-deploy/crictl-ssl-ca-request-quay-error.jpg)
 
 - 通过配置在 containerd 配置文件中的 `insecure_skip_verify = true` 跳过 tls 验证才能拉取镜像。
 
@@ -222,7 +222,7 @@
 
 - Kubernetes 集群部署后的 node 与 pod 状态：
   
-  ![](D:\Linux操作系统与编程语言汇总\Typora文档汇总\Kubernetes\pictures\Kani - Ansible 快速部署与管理 Kubernetes v1.22.1\kubernetes-cluster-status.jpg)
+  ![](https://github.com/Alberthua-Perl/tech-docs/blob/master/images/rapid-kube-deploy/kubernetes-cluster-status.jpg)
 
 - 停止 Kubernetes 集群：
   
