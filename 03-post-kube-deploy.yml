@@ -1,0 +1,36 @@
+---
+- name: Prepare k9s command cli to manager kubernetes cluster
+  hosts: masters
+  gather_facts: false
+ 
+  tasks:
+    - name: Copy k9s archive package to masters
+      copy: 
+        src: files/kube-utils/k9s_Linux_x86_64.tar.gz
+        dest: /root
+ 
+    - name: Unarchive k9s package
+      unarchive:
+        src: /root/k9s_Linux_x86_64.tar.gz
+        dest: /usr/local/bin
+        remote_src: yes
+
+- name: Deploy Kubernetes dashboard through nodeport
+  hosts: masters
+  gather_facts: false
+
+  tasks:
+    - name: Transfer kubernetes-dashboard yaml file
+      copy:
+        src: files/kube-utils/{{ item }}
+        dest: /tmp
+      loop:
+        - kube-dashboard-v2.3.1.yml
+        - kube-dashboard-admin.yml
+
+    - name: Apply kubernetes-dashboard and associated resources
+      command: kubectl apply -f /tmp/{{ item }}
+      loop:
+        - kube-dashboard-v2.3.1.yml
+        - kube-dashboard-admin.yml
+...

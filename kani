@@ -1,0 +1,74 @@
+#!/bin/bash
+#
+# Deploy Kubernetes v1.22.1 cluster with single node
+# and other cloud native elements through ansible.
+# Modified by hualf on 2021-12-19.
+# 
+
+### deploy and destroy kubernetes cluster ###
+deploy_kube() {
+	ansible-playbook 00-general-prepare-kube.yml 
+	ansible-playbook 01-containerd-kube-deploy.yml
+	ansible-playbook 02-kube-cluster-calio-deploy.yml
+	echo -e "---> [\033[1;32mINFO\033[0m] Waiting for 5mins to initial kube cluster..."
+	sleep 300s
+	ansible-playbook 03-post-kube-deploy.yml
+}
+
+terminate_kube() {
+	ansible-playbook terminate-kube-cluster.yml
+}
+
+destroy_kube() {
+	ansible-playbook destroy-kube-cluster.yml	
+}
+
+### config deploy Red Hat Quay registry ###
+config_quay() {
+	ansible-playbook provision-quay-registry.yml --tags install-docker-ce
+	ansible-playbook provision-quay-registry.yml --tags config-quay
+	if [[ $? -eq 0 ]]; then
+		echo -e "---> [\033[1;32mINFO\033[0m] Config Red Hat Quay registry successfully..."
+		echo -e "---> Please access Web UI like \033[1;32mhttps://<registry_ip>:8443\033[0m to complete config..."
+	else
+		echo -e "---> [\033[1;31mERROR\033[0m] Please verify Red Hat Quay registry config..."
+		exit 1
+	fi
+}
+
+deploy_quay() {
+	ansible-playbook provision-quay-registry.yml --tags deploy-quay
+}
+
+case $1 in
+	deploy-kube)
+		deploy_kube
+		;;
+	terminate-kube)
+		terminate_kube
+		;;
+	destroy-kube)
+		destroy_kube
+		;;
+	config-quay)
+		config_quay
+		;;
+	deploy-quay)
+		deploy_quay
+		;;
+	*)
+		echo ""
+		echo "Rapid deploy kubernetes cluster and elements by ansible"
+		echo ""
+		echo "Usage: "
+		echo "  kani [command]"
+		echo ""
+		echo "Available Commands: "
+		echo "  deploy-kube  	  Deploy single master node kubernetes cluster with calico cni"
+		echo "  terminate-kube  Terminate kubernetes master and worker nodes"
+		echo "  destroy-kube 	  Destroy and prepare to re-install kubernetes cluster"
+		echo "  config-quay  	  Config and run quay config container"
+		echo "  deploy-quay  	  Deploy quay registry"
+		echo ""
+		;;
+esac

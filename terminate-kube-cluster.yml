@@ -1,0 +1,17 @@
+---
+- name: Terminate Kubernetes cluster nodes service
+  hosts: nodes
+  gather_facts: false
+
+  tasks:
+    - name: Job for terminate nodes service
+      import_tasks: job-for-terminate-kube.yml
+
+- name: Terminate Kubernetes cluster masters service
+  hosts: masters
+  gather_facts: false
+
+  tasks:
+    - name: Job for terminate masters service
+      import_tasks: job-for-terminate-kube.yml      
+...        

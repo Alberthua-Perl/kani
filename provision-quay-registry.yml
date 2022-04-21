@@ -1,0 +1,58 @@
+---
+- name: Provision Red Hat Quay registry nodes
+  hosts: registry
+  gather_facts: false
+
+  tasks:
+    - name: Prepare docker-ce container engine
+      block:
+        - name: Install specified docker-ce package
+          yum:
+            name: docker-ce-20.10.12-3.el7.x86_64
+            state: present    
+    
+        - name: Start and enable docker service
+          service:
+            name: docker
+            state: started
+            enabled: yes
+      tags:
+        - install-docker-ce
+
+    - name: Configure Red Hat Quay registry
+      block:  
+        - name: Copy deploy-quay-registry.sh to registry node
+          copy:
+            src: files/quay/deploy-quay-registry.sh
+            dest: /tmp
+
+        - name: Execute deploy-quay-registry.sh to config Quay
+          shell: bash /tmp/deploy-quay-registry.sh config
+          register: config_quay_result
+
+        - name: Verify config quay result
+          debug:
+            var: config_quay_result
+      tags:
+        - config-quay
+
+    - name: Deploy Red Hat Quay registry
+      block:
+        - name: Unarchive quay-config.tar.gz
+          unarchive:
+            src: /root/quay-config.tar.gz
+            dest: /root
+            remote_src: yes
+          # Verify Red Hat Quay registry config file is or not exist
+          # If not existed, quay-master container run FAILURE!
+
+        - name: Execute deploy-quay-registry.sh to deploy Quay
+          shell: bash /tmp/deploy-quay-registry.sh deploy
+          register: deploy_quay_result
+
+        - name: Verify deploy quay result
+          debug:
+            var: deploy_quay_result
+      tags:
+        - deploy-quay
+...

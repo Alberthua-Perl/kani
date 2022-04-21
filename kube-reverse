@@ -1,0 +1,21 @@
+#!/bin/bash
+#
+# Used to revert Kubernetes cluster node to original
+# status by hualongfeiyyy@163.com on 20211206.
+#
+
+echo "---> Start revert original snapshot..."
+for NODE in master0 node{0..2}; do
+	echo "--> Reverting snapshot for kube-${NODE} node..."
+	VM_STATE=$(sudo virsh list --all | grep kube-${NODE} | awk '{print $NF}')
+	if [[ ${VM_STATE} == 'running' ]]; then
+		sudo virsh destroy kube-${NODE}
+		sleep 6s
+		sudo virsh snapshot-revert kube-${NODE} kube-${NODE}-original-20211206
+		[[ $? -eq 0 ]] && echo "---> Complete revert kube-${NODE} snapshot..."
+	else
+		sudo virsh snapshot-revert kube-${NODE} kube-${NODE}-original-20211206
+		[[ $? -eq 0 ]] && echo "---> Complete revert kube-${NODE} snapshot..."
+	fi
+done
+echo "---> Complete all snapshot..."

@@ -1,0 +1,7 @@
+[masters]
+kebpf-master0
+
+[nodes]
+kebpf-node0
+kebpf-node1
+kebpf-node2

@@ -1,0 +1,14 @@
+---
+- name: Stop containerd runtime for cluster
+  service:
+    name: containerd
+    state: stopped
+ 
+- name: Sleep 30s to stop container
+  command: sleep 30s 
+ 
+- name: Stop kubelet service for cluster
+  service:
+    name: kubelet
+    state: stopped
+...
