@@ -220,9 +220,13 @@
   # 部署 Kubernetes 集群
   ```
 
+> 🤘 注意：在 kubeadm init 初始化 master 节点后，由于还未将其他 node 节点加入至集群中，此时各个 node 节点上的 `kubelet` 守护进程启动失败，可能处于 `active (auto-restarting)` 状态，查看节点 /var/log/messages 中存在大量的 `/etc/kubernetes/pki/ca.crt not found` 的报错，这是由于 kubeadm join 还未将 node 节点加入集群以及还未同步 master 节点的 CA 证书所致，待 node 节点加入集群中后 kubelet 状态将恢复 `active` 状态。
+
 - Kubernetes 集群部署后的 node 与 pod 状态：
   
   ![](https://github.com/Alberthua-Perl/tech-docs/blob/master/images/rapid-kube-deploy/kubernetes-cluster-status.jpg)
+  
+> 🤘 注意：Kubernetes 集群中 `coredns pod` 在 Calico CNI 未完全 ready 时将处于 `pending` 状态，直至所有 calico pod 处于 Running 状态时也将处于 Running 状态。  
 
 - 停止 Kubernetes 集群：
   
