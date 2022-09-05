@@ -1,7 +1,7 @@
 [masters]
-kebpf-master0
+kube-master0
 
 [nodes]
-kebpf-node0
-kebpf-node1
-kebpf-node2
+kube-node0
+kube-node1
+kube-node2
