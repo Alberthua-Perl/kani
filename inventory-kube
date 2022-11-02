@@ -5,3 +5,7 @@ kube-master0
 kube-node0
 kube-node1
 kube-node2
+
+[kubecluster:children]
+masters
+nodes
