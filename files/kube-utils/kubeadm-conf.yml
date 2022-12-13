@@ -10,7 +10,7 @@ bootstrapTokens:
   - authentication
 kind: InitConfiguration
 localAPIEndpoint:
-  advertiseAddress: 192.168.110.163
+  advertiseAddress: 192.168.110.157
   ### !!! NEED TO EDIT !!!
   # kube-apiserver internel ip on master node
   bindPort: 6443
@@ -18,7 +18,7 @@ nodeRegistration:
   criSocket: /run/containerd/containerd.sock
   # containerd Unix socket file
   imagePullPolicy: IfNotPresent
-  name: kebpf-master0.lab.example.com
+  name: kube-master0.lab.example.com
   ### !!! NEED TO EDIT !!!
   taints: 
   - effect: "NoSchedule"
