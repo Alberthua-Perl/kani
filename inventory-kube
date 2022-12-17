@@ -9,3 +9,9 @@ kube-node2
 [kubecluster:children]
 masters
 nodes
+
+[scm]
+gitlab-nfs-provider
+
+[registry]
+quay-registry
