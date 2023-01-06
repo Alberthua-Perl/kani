@@ -140,6 +140,38 @@
 
 - 通过配置在 containerd 配置文件中的 `insecure_skip_verify = true` 跳过 tls 验证才能拉取镜像。
 
+- `nerdctl` 命令推送容器镜像至 Quay 私有镜像仓库中返回显示不兼容：
+  
+  ```bash
+  $ nerdctl login quay-registry.lab.example.com \
+    --insecure-registry --username godev
+  # 登录 Quay 私有镜像仓库
+  $ nerdctl -n k8s.io tag \
+    docker.io/rocketchat/rocket.chat:3.18.7 \
+    quay-registry.lab.example.com/godev/rocket.chat:3.18.7
+  # 更改容器镜像 tag 为 Quay 私有镜像仓库
+  $ nerdctl --namespace k8s.io --insecure-registry push \
+    quay-registry.lab.example.com/godev/rocket.chat:3.18.7
+    INFO[0000] pushing as a reduced-platform image (application/vnd.docker.distribution.manifest.v2+json, sha256:ac495e672234ba1e625acd8af8a23ba85f08a87a23dbfc299815597595f2bf64) 
+    WARN[0000] skipping verifying HTTPS certs for "quay-registry.lab.example.com" 
+    manifest-sha256:ac495e672234ba1e625acd8af8a23ba85f08a87a23dbfc299815597595f2bf64: waiting        |--------------------------------------| 
+    layer-sha256:88e3a7fc5c281c05540685cc9186388a81674f17c721b10a7b25c59f47ad16bd:    waiting        |--------------------------------------| 
+    layer-sha256:440afabfe6b4952a1378a614680fbfaa07560d823559a09fa59bcb319fd17bb4:    waiting        |--------------------------------------| 
+    config-sha256:efde1bf180ffb00f8cd9b2a9d7d06995e5a1c68d81ef35a4e564c452fa7bbcd6:   waiting        |--------------------------------------| 
+    layer-sha256:850ae2996a77e7c538d80a1c1eb909f0e2d6c04efb786e5b3a5746917bc866a7:    waiting        |--------------------------------------| 
+    layer-sha256:4fed7f8d51164c8ee96f6b61f213cfd1c2596fd9ab86ab85c5697cfcb47be190:    waiting        |--------------------------------------| 
+    layer-sha256:b4d181a07f8025e00e0cb28f1cc14613da2ce26450b80c54aea537fa93cf3bda:    waiting        |--------------------------------------| 
+    layer-sha256:fe17f2ac9eba5fdd20550adc6652cebff9815fa66fae9061ded79c1479a1aba6:    waiting        |--------------------------------------| 
+    layer-sha256:ce07581d2488b2c2cfcc0545c757aafb5673e25362d0171c5c157e5a9edc9097:    waiting        |--------------------------------------| 
+    layer-sha256:f9bc4241c5e23f2376faac097636970efd275c062b261cfed37a08e902b08575:    waiting        |--------------------------------------|
+  # 容器镜像推送过程显示不全，nerdctl 与 Quay 存在兼容性问题。
+  
+  $ nerdctl -n k8s.io rmi \
+    quay-registry.lab.example.com/godev/rocket.chat:3.18.7
+    elapsed: 7.7 s
+  # 删除本地 containerd 缓存中的容器镜像
+  ```
+  
 ### 🚀 Kani 的使用方法：
 
 - Kani 项目的目录结构，如下所示：
