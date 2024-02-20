@@ -7,7 +7,7 @@ gateway: 192.168.110.1
 nic: eth0
 operator_user: godev
 # remote_user in ansible.cfg is the same user as operator_user.
-kube_master_node: kebpf-master0
+kube_master_node: kube-master0
 # define kubernetes master hostname which is the same as in ansible inventory
 # ---------------------------------------------------------------------------
 
